@@ -269,26 +269,10 @@ _Within each of the 4 nations, what is the proportion of tourist attractions tha
 
 ```{r Ex_m}
 
-'''
-visitors_with_free <- visitors_with_nations %>%
-  mutate(
-    free = case_when(
-      admission == "Free" ~ "Free",
-      TRUE ~ "Charged or Member"
-    )
-  )
-head(visitors_with_free)
-prop <- visitors_with_free %>% 
+visitors_with_nations %>%
   group_by(nation) %>%
-    count(free)
+  summarise(free_prop = mean(admission == "Free"))
 
-prop1 <- prop %>%
-  mutate(
-    free = case_when(
-      admission == "Free" ~ "Free",
-      TRUE ~ "Charged or Member"
-    )
-'''
 ```
 
 
@@ -298,7 +282,19 @@ _Calculate the percentage change in visitor admissions from 2021 to 2022. Of the
 
 ```{r Ex_n}
 # Write your code here
+percent_change <- visitors_with_nations %>%
+  mutate(perc_change = ((n_2022 - n_2021)/n_2021)*100)
 
+
+admission_perc_scot <- percent_change %>%
+  filter(nation == "Scotland") %>%
+  group_by(admission) %>%
+  summarise(
+    mean_percent_change = mean(perc_change, na.rm = TRUE)
+  ) %>%
+  arrange(mean_percent_change)
+
+head(admission_perc_scot)
 
 
 ```
